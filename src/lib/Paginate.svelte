@@ -1,58 +1,44 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
 	import { ArrowLeft, ArrowRight } from 'lucide-svelte';
+	import type { PaginationParams } from '../types';
 
 	const dispatch = createEventDispatcher();
 
-	interface PaginationParams {
-		limit?: number;
-		starting_after?: number;
-		ending_after?: number;
-		page?: number;
-	}
 	interface Props {
 		page: number;
 		hasMore: boolean;
 		params: PaginationParams;
 		onUpdateParams: (params: PaginationParams) => void;
-		firstId: number | undefined;
-		lastId: number | undefined;
 	}
 
-	let { page, params, onUpdateParams, firstId, lastId, hasMore }: Props = $props();
+	let { page, params, onUpdateParams, hasMore }: Props = $props();
+	$inspect(params);
 
 	const prevPage = async (e: Event) => {
 		e.preventDefault();
 		const newPage = page - 1;
 
-		if (firstId) {
-			const updatedParams = {
-				...params,
-				page: newPage,
-				ending_before: firstId,
-				starting_after: undefined
-			};
+		const updatedParams = {
+			...params,
+			page: newPage
+		};
 
-			onUpdateParams(updatedParams);
-			dispatch('pageChange', { newPage });
-		}
+		onUpdateParams(updatedParams);
+		dispatch('pageChange', { newPage });
 	};
 
 	const nextPage = (e: Event) => {
 		e.preventDefault();
 		const newPage = page + 1;
 
-		if (lastId) {
-			const updatedParams = {
-				...params,
-				page: newPage,
-				starting_after: lastId,
-				ending_before: undefined
-			};
+		const updatedParams = {
+			...params,
+			page: newPage
+		};
 
-			onUpdateParams(updatedParams);
-			dispatch('pageChange', { newPage });
-		}
+		onUpdateParams(updatedParams);
+		dispatch('pageChange', { newPage });
 	};
 </script>
 

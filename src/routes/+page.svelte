@@ -13,8 +13,9 @@
 	const hasMore = $derived(data.has_more);
 
 	let page = $state(1);
-	let firstId = $state<number>();
-	let lastId = $state<number>();
+	let firstId = $derived(users.length > 0 ? users[0].id : undefined);
+	let lastId = $derived(users.length > 0 ? users[users.length - 1].id : undefined);
+
 	let isLoading = $state(false);
 
 	const tableColumns = [
@@ -32,8 +33,10 @@
 		{ key: 'phone', label: 'Phone' }
 	];
 
-	const params: PaginationParams = $state({
-		limit: 10
+	const params: PaginationParams = $derived({
+		limit: 10,
+		starting_after: lastId,
+		ending_after: firstId
 	});
 
 	function getNestedValue<T, K extends keyof T>(obj: T, path: K): T[K] | undefined;
@@ -71,20 +74,13 @@
 	}
 
 	$effect(() => {
-		if (users.length > 0) {
-			firstId = users[0].id;
-			lastId = users[users.length - 1].id;
-		}
-
-		if (page > 1) {
+		if (page <= 1) {
+			goto(window.location.pathname, { replaceState: true });
+		} else {
 			updateUrlParams({
-				starting_after: lastId,
-				ending_after: firstId,
 				page,
 				...params
 			});
-		} else {
-			goto(window.location.pathname, { replaceState: true });
 		}
 	});
 </script>
@@ -108,7 +104,7 @@
 	</div>
 
 	<div class="overflow-x-auto rounded-lg shadow-md">
-		<table class="max-h-screen min-w-full divide-y divide-gray-200">
+		<table class=" divide-y divide-gray-200">
 			<thead class="bg-gray-50">
 				<tr>
 					{#each tableColumns as column}
@@ -148,8 +144,6 @@
 			{params}
 			onUpdateParams={updateUrlParams}
 			on:pageChange={handlePageChange}
-			{firstId}
-			{lastId}
 		/>
 	</div>
 </div>

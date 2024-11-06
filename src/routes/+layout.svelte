@@ -5,6 +5,8 @@
 
 <div class="my-10 min-h-screen">
 	<div class="flex justify-center">
-		{@render children()}
+		<div class="container px-8">
+			{@render children()}
+		</div>
 	</div>
 </div>
