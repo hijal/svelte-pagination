@@ -1,26 +1,5 @@
+import type { User } from '../types';
 import type { PageServerLoad } from './$types';
-
-interface User {
-	id: number;
-	email: string;
-	username: string;
-	password: string;
-	name: {
-		firstname: string;
-		lastname: string;
-	};
-	address: {
-		city: string;
-		street: string;
-		number: string;
-		zipcode: string;
-		geolocation: {
-			lat: number;
-			long: number;
-		};
-	};
-	phone: string;
-}
 
 export const load: PageServerLoad = async ({ url, fetch }) => {
 	const query: Record<string, string | number> = {

@@ -4,15 +4,17 @@
 
 	const dispatch = createEventDispatcher();
 
-	interface Params {
-		[key: string]: string | number | undefined;
+	interface PaginationParams {
+		limit?: number;
+		starting_after?: number;
+		ending_after?: number;
+		page?: number;
 	}
-
 	interface Props {
 		page: number;
 		hasMore: boolean;
-		params: Params;
-		onUpdateParams: (params: Params) => void;
+		params: PaginationParams;
+		onUpdateParams: (params: PaginationParams) => void;
 		firstId: number | undefined;
 		lastId: number | undefined;
 	}
